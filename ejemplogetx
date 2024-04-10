@@ -1,0 +1,99 @@
+Claro, aquí tienes un ejemplo básico de una aplicación Flutter utilizando GetX para el enrutamiento y la gestión del estado:
+
+### main.dart
+```dart
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'app_routes.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: 'GetX Example',
+      initialRoute: AppRoutes.initial,
+      getPages: AppRoutes.pages,
+    );
+  }
+}
+```
+
+### app_routes.dart
+```dart
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:your_app_name/controllers/home_controller.dart';
+import 'package:your_app_name/views/home_view.dart';
+
+class AppRoutes {
+  static const String initial = '/';
+
+  static final List<GetPage> pages = [
+    GetPage(
+      name: '/',
+      page: () => HomeView(),
+      binding: HomeBinding(),
+    ),
+  ];
+}
+```
+
+### controllers/home_controller.dart
+```dart
+import 'package:get/get.dart';
+
+class HomeController extends GetxController {
+  // Add your controller logic here, e.g., variables, methods, etc.
+  // Example:
+  var count = 0.obs;
+
+  void increment() {
+    count++;
+  }
+}
+
+class HomeBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => HomeController());
+  }
+}
+```
+
+### views/home_view.dart
+```dart
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:your_app_name/controllers/home_controller.dart';
+
+class HomeView extends StatelessWidget {
+  final HomeController _controller = Get.find<HomeController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('GetX Example'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Obx(() => Text('Count: ${_controller.count}')),
+            ElevatedButton(
+              onPressed: _controller.increment,
+              child: Text('Increment'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+En este ejemplo, la aplicación consta de una sola página (`HomeView`). Utiliza un controlador (`HomeController`) para manejar el estado y la lógica de la página. El enrutamiento y la inyección de dependencias están gestionados por GetX. Cuando se presiona el botón "Increment", se incrementa el contador en el controlador y se refleja automáticamente en la interfaz de usuario gracias al uso de `Obx`.
